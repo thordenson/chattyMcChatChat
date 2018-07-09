@@ -3,6 +3,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.static('./frontend'))
+
 // step 2: create plain HTTP server
 const http = require ('http');
 const server = http.createServer(app);
@@ -13,10 +15,15 @@ const wss = new WebSocket.Server({server: server});
 
 //Listen for new connections 
 wss.on('connection', (socket) => {
+    //when they connect, say Hello
+    socket.send('Hey, you are totally connected!');
     //Listen for messages on that socket
     socket.on('message', (msg) => {
-        msg = JSON.parse(msg);
+        //msg = JSON.parse(msg);
         console.log(msg);
+        wss.clients.forEach((client) => {
+            client.send(msg);
+        });
     });
 });
 
