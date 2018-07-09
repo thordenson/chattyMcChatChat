@@ -10,3 +10,16 @@ const server = http.createServer(app);
 //step 3: connect websocket server to HTTP
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({server: server});
+
+//Listen for new connections 
+wss.on('connection', (socket) => {
+    //Listen for messages on that socket
+    socket.on('message', (msg) => {
+        msg = JSON.parse(msg);
+        console.log(msg);
+    });
+});
+
+server.listen(5000, () => {
+    console.log(`Aw snap, now you're running.`);
+});
